@@ -1,0 +1,54 @@
+import { Container } from "inversify";
+import { describe, expect, expectTypeOf, it } from "vitest";
+import { ContainerTypesafe, returnInjectTypesafe, TypesafeServiceConfig } from "../src";
+
+// https://inversify.io/docs/introduction/dependency-inversion/
+interface Weapon {
+  damage: number;
+}
+
+class Katana implements Weapon {
+  public readonly damage: number = 10;
+}
+
+export const injectTypesafe = returnInjectTypesafe<keyof Services>()
+
+class Ninja {
+  constructor(
+    @injectTypesafe("weaponServiceId")
+    public readonly weapon: Weapon,
+  ) { }
+}
+
+export type Services = {
+  "ninjaServiceId": Ninja;
+  "weaponServiceId": Weapon;
+};
+
+export const serviceConfig: TypesafeServiceConfig<Services> = {
+  "ninjaServiceId": Ninja,
+  "weaponServiceId": Katana,
+};
+
+
+describe("Dependency Inversion Test", () => {
+  it("should return type-safe service", () => {
+    const typesafeContainer = new ContainerTypesafe(serviceConfig);
+
+    expect(typesafeContainer.get("ninjaServiceId").weapon.damage).toBe(10);
+
+    // type test
+    expectTypeOf(typesafeContainer.get("ninjaServiceId")).toEqualTypeOf<Ninja>();
+    expectTypeOf(typesafeContainer.get("weaponServiceId")).toEqualTypeOf<Weapon>();
+
+    // parameter type test
+    expectTypeOf({} as Parameters<typeof typesafeContainer.get>[0]).toEqualTypeOf<"ninjaServiceId" | "weaponServiceId">();
+    expectTypeOf({} as Parameters<typeof injectTypesafe>[0]).toEqualTypeOf<"ninjaServiceId" | "weaponServiceId">();
+  })
+
+  it("should return inversify container", () => {
+    const container = new ContainerTypesafe(serviceConfig);
+    expect(container.getContainer()).toBeDefined();
+    expectTypeOf(container.getContainer()).toEqualTypeOf<Container>();
+  })
+})

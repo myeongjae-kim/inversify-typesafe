@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+      "experimentalDecorators": true,
+      "emitDecoratorMetadata": true,
+      "module": "ESNext",
+      "declaration": true,
+      "target": "ESNext",
+      "moduleResolution": "bundler",
+      "strict": true,
+      "outDir": "dist/"
+    },
+    "include": ["src/"],
+    "exclude": ["test/", "dist/", "examples/"]
+  }

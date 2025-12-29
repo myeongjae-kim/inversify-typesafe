@@ -1,0 +1,82 @@
+{
+  "name": "inversify-typesafe",
+  "type": "module",
+  "version": "0.1.0",
+  "description": "Boost InversifyJS with Type Safety.",
+  "source": "src/index.ts",
+  "exports": {
+    ".": {
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      },
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "types": "dist/index.d.ts",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "unpkg": "dist/index.umd.js",
+  "files": [
+    "dist/**/*",
+    "package.json"
+  ],
+  "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "setup": "husky install",
+    "clean": "rimraf dist",
+    "bundle": "microbundle --format modern,cjs,umd",
+    "typedoc": "typedoc src/index.ts --out docs/public/docs",
+    "build": "pnpm run clean && pnpm run bundle && sh ./scripts/generate-cts.sh && rimraf dist/index.d.ts\\'\\'",
+    "dev": "microbundle watch",
+    "prepublishOnly": "pnpm run test && pnpm run build",
+    "watch": "pnpm run clean && tsc -w",
+    "test": "vitest run --dir tests",
+    "test:watch": "vitest --dir tests",
+    "coverage": "vitest run --coverage --dir tests",
+    "prettier": "prettier . --write",
+    "lint": "eslint src/**",
+    "lint-staged": "lint-staged",
+    "check": "tsc --strict --noEmit --extendedDiagnostics",
+    "set-version": "sh ./scripts/set-version.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/myeongjae-kim/inversify-typesafe"
+  },
+  "homepage": "https://github.com/myeongjae-kim/inversify-typesafe",
+  "keywords": [
+    "inversify",
+    "spring",
+    "di",
+    "dependency injection",
+    "container"
+  ],
+  "author": "Myeongjae Kim",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/inversify": "^2.0.33",
+    "@typescript-eslint/eslint-plugin": "^8.50.1",
+    "@typescript-eslint/parser": "^8.50.1",
+    "@vitest/coverage-v8": "^4.0.16",
+    "eslint": "^9.39.2",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "microbundle": "^0.15.1",
+    "prettier": "3.7.4",
+    "rimraf": "^6.1.2",
+    "typedoc": "^0.28.15",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.16"
+  },
+  "dependencies": {
+    "inversify": "^7.10.8",
+    "reflect-metadata": "^0.2.2"
+  }
+}
