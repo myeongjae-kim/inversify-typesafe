@@ -15,21 +15,20 @@ export const injectTypesafe = returnInjectTypesafe<keyof Services>()
 
 class Ninja {
   constructor(
-    @injectTypesafe("weaponServiceId")
+    @injectTypesafe("weaponServiceId") // compile error if a parameter value is not a key of Services
     public readonly weapon: Weapon,
   ) { }
 }
 
 export type Services = {
-  "ninjaServiceId": Ninja;
-  "weaponServiceId": Weapon;
+  "ninjaServiceId": Ninja; // class
+  "weaponServiceId": Weapon; // interface
 };
 
 export const serviceConfig: TypesafeServiceConfig<Services> = {
   "ninjaServiceId": Ninja,
-  "weaponServiceId": Katana,
+  "weaponServiceId": Katana, // compile error if not compatible with Weapon
 };
-
 
 describe("Dependency Inversion Test", () => {
   it("should return type-safe service", () => {
@@ -37,11 +36,11 @@ describe("Dependency Inversion Test", () => {
 
     expect(typesafeContainer.get("ninjaServiceId").weapon.damage).toBe(10);
 
-    // type test
+    // inferred type test
     expectTypeOf(typesafeContainer.get("ninjaServiceId")).toEqualTypeOf<Ninja>();
     expectTypeOf(typesafeContainer.get("weaponServiceId")).toEqualTypeOf<Weapon>();
 
-    // parameter type test
+    // inferred parameter type test
     expectTypeOf({} as Parameters<typeof typesafeContainer.get>[0]).toEqualTypeOf<"ninjaServiceId" | "weaponServiceId">();
     expectTypeOf({} as Parameters<typeof injectTypesafe>[0]).toEqualTypeOf<"ninjaServiceId" | "weaponServiceId">();
   })
