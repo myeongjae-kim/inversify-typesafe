@@ -1,9 +1,9 @@
 import { ContainerOptions } from "inversify";
-import { ContainerTypesafe, returnInjectTypesafe, TypesafeServiceConfig } from "inversify-typesafe";
+import { returnTypesafeInject, TypesafeContainer, TypesafeServiceConfig } from "inversify-typesafe";
 
-export const returnAutowired = <Name extends string>() => ({ Autowired: returnInjectTypesafe<Name>() });
+export const returnAutowired = <Name extends string>() => ({ Autowired: returnTypesafeInject<Name>() });
 
-export class ApplicationContext<S extends Record<string, unknown>> extends ContainerTypesafe<S> {
+export class ApplicationContext<S extends Record<string, unknown>> extends TypesafeContainer<S> {
   constructor(serviceConfig: TypesafeServiceConfig<S>, options?: ContainerOptions) {
     super(serviceConfig, { defaultScope: "Singleton", ...options });
   }
