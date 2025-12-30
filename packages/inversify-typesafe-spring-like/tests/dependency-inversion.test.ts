@@ -25,7 +25,7 @@ interface GetArticleUseCase {
   execute(id: number): Promise<Article>
 }
 
-const { Autowired } = returnAutowired<keyof Beans>();
+const { Autowired } = returnAutowired<Beans>();
 
 class ArticleQueryService implements GetArticleUseCase {
   constructor(
