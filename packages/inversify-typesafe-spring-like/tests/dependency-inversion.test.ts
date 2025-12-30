@@ -70,7 +70,7 @@ describe("Dependency Inversion Test", () => {
     const getArticleUseCase1 = applicationContext.get("GetArticleUseCase")
     const getArticleUseCase2 = applicationContext.get("GetArticleUseCase")
 
-    // same object because the default scope option is "Singleton"
+    // same object because the default scope of ApplicationContext is "Singleton"
     expect(getArticleUseCase1).toBe(getArticleUseCase2)
   })
 
@@ -80,7 +80,7 @@ describe("Dependency Inversion Test", () => {
     const getArticleUseCase1 = applicationContext.get("GetArticleUseCase")
     const getArticleUseCase2 = applicationContext.get("GetArticleUseCase")
 
-    // different object because the scope option is "Request"
+    // different object because the scope option of applicationContext is "Request"
     expect(getArticleUseCase1).not.toBe(getArticleUseCase2)
   })
 })
