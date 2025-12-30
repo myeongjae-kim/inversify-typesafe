@@ -1,6 +1,6 @@
 import { Container } from "inversify";
 import { describe, expect, expectTypeOf, it } from "vitest";
-import { returnTypesafeInject, TypesafeContainer, TypesafeServiceConfig } from "../src";
+import { bindToClass, returnTypesafeInject, TypesafeContainer, TypesafeServiceConfig } from "../src";
 
 // https://inversify.io/docs/introduction/dependency-inversion/
 interface Weapon {
@@ -26,8 +26,11 @@ export type Services = {
 };
 
 export const serviceConfig: TypesafeServiceConfig<Services> = {
-  "ninjaServiceId": Ninja,
-  "weaponServiceId": Katana, // compile error if not compatible with Weapon
+  // use `bindToClass()` helper function to simply bind a class.
+  "ninjaServiceId": bindToClass(Ninja), // compile error if not compatible with Ninja
+
+  // use lambda to bind a class for detailed binding.
+  "weaponServiceId": (bind) => bind.to(Katana), // compile error if not compatible with Katana
 };
 
 describe("Dependency Inversion Test", () => {
