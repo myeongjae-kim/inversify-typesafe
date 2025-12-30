@@ -50,7 +50,7 @@
     "type": "git",
     "url": "https://github.com/myeongjae-kim/inversify-typesafe"
   },
-  "homepage": "https://github.com/myeongjae-kim/inversify-typesafe",
+  "homepage": "https://github.com/myeongjae-kim/inversify-typesafe/tree/main/packages/inversify-typesafe-spring-like",
   "keywords": [
     "inversify",
     "spring",
