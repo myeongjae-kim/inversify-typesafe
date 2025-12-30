@@ -58,8 +58,8 @@ importers:
   packages/inversify-typesafe-spring-like:
     dependencies:
       inversify-typesafe:
-        specifier: ^0.2.0
-        version: 0.2.0
+        specifier: ^0.3.0
+        version: 0.3.0
 
 packages:
 
@@ -1922,8 +1922,8 @@ packages:
     resolution: {integrity: sha512-4gd7VpWNQNB4UKKCFFVcp1AVv+FMOgs9NKzjHKusc8jTMhd5eL1NqQqOpE0KzMds804/yHlglp3uxgluOqAPLw==}
     engines: {node: '>= 0.4'}
 
-  inversify-typesafe@0.2.0:
-    resolution: {integrity: sha512-Sb24go+G5CkOEXFGnm5utwf2OIVZ7f868DFV1c28a/TXDPMnSau4t6Eytgy668+fWqRNQbE0+wlcXrycItaqow==}
+  inversify-typesafe@0.3.0:
+    resolution: {integrity: sha512-z0HjIVw+djM93NO69/3RDvqe3qLNC5JXYz8FBK5iIAnk36Dshe62QK9sFFd43ovNh4ElXf+qSrcudB3Oo9ZpDw==}
 
   inversify@7.10.8:
     resolution: {integrity: sha512-NF9t4p1j5BtrJjf1jXRlGCXvixjtdu5UFkmye/3zFrITJbB7KvrkNS1vm8yAm8RW07hst4yxpvXGG3JtrQ365w==}
@@ -5335,7 +5335,7 @@ snapshots:
       hasown: 2.0.2
       side-channel: 1.1.0
 
-  inversify-typesafe@0.2.0:
+  inversify-typesafe@0.3.0:
     dependencies:
       inversify: 7.10.8(reflect-metadata@0.2.2)
       reflect-metadata: 0.2.2

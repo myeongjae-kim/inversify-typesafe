@@ -1,15 +1,8 @@
-import { BindToFluentSyntax, Container, ContainerOptions, inject, Newable } from "inversify";
+import { BindToFluentSyntax, Container, ContainerOptions, inject } from "inversify";
 
 export type TypesafeServiceConfig<S> = {
   [K in keyof S]: ((bind: BindToFluentSyntax<S[K]>) => void);
 };
-
-/**
- * A Simple helper function to bind a class.
- * @param Class a target class to bind.
- * @returns binding function.
- */
-export const bindToClass = <T>(Class: Newable<T>) => ((bind: BindToFluentSyntax<T>) => bind.to(Class));
 
 export const returnTypesafeInject = <Name extends string>() => (name: Name) => inject(name);
 
