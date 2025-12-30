@@ -1,7 +1,10 @@
 <h1 align="center">inversify-typesafe</h1>
 
 <p align="center">
-  Boost InversifyJS with Type Safety.
+  Boost InversifyJS with Type Safety. <br/>
+  <a href="https://stackblitz.com/edit/inversify-typesafe?file=test%2Fmain.test.ts" target="_blank">
+    <strong>See Demo</strong>
+  </a>
 </p>
 
 <p align="center">
