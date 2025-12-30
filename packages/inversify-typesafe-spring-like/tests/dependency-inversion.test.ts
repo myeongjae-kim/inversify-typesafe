@@ -25,11 +25,11 @@ interface GetArticleUseCase {
   execute(id: number): Promise<Article>
 }
 
-const { Autowired } = returnAutowired<keyof typeof beanConfig>();
+const { Autowired } = returnAutowired<keyof Beans>();
 
 class ArticleQueryService implements GetArticleUseCase {
   constructor(
-    @Autowired("ArticleOutgoingPort")
+    @Autowired("ArticleOutgoingPort") // compile error if a parameter of @Autowired is not a key of Beans.
     private readonly articleOutgoingPort: ArticleOutgoingPort,
   ) { }
   execute(id: number): Promise<Article> {
@@ -38,13 +38,13 @@ class ArticleQueryService implements GetArticleUseCase {
 }
 
 type Beans = {
-  GetArticleUseCase: GetArticleUseCase;
-  ArticleOutgoingPort: ArticleOutgoingPort;
+  GetArticleUseCase: GetArticleUseCase; // interface (class is also possible)
+  ArticleOutgoingPort: ArticleOutgoingPort; // interface (class is also possible)
 }
 
 const beanConfig: BeanConfig<Beans> = {
-  GetArticleUseCase: ArticleQueryService,
-  ArticleOutgoingPort: ArticleRepository,
+  GetArticleUseCase: ArticleQueryService, // compile error if ArticleQueryService is not compatible with GetArticleUseCase.
+  ArticleOutgoingPort: ArticleRepository, // compile error if ArticleRepository is not compatible with ArticleOutgoingPort.
 }
 
 describe("Dependency Inversion Test", () => {
@@ -52,6 +52,8 @@ describe("Dependency Inversion Test", () => {
     const applicationContext = new ApplicationContext(beanConfig);
 
     const getArticleUseCase = applicationContext.get("GetArticleUseCase")
+
+    // magically inferred type of getArticleUseCase
     expectTypeOf(getArticleUseCase).toEqualTypeOf<GetArticleUseCase>()
 
     const article = await getArticleUseCase.execute(1)
