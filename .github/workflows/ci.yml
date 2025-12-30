@@ -34,9 +34,16 @@ jobs:
       - name: (coverage) Test inversify-typesafe-spring-like
         run: cd packages/inversify-typesafe-spring-like && pnpm run coverage
 
-      - name: Upload coverage reports to Codecov
+      - name: Upload coverage reports to Codecov (inversify-typesafe)
         uses: codecov/codecov-action@v5
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         with:
-          flags: "inversify-typesafe, inversify-typesafe-spring-like"
+          flags: inversify-typesafe
+
+      - name: Upload coverage reports to Codecov (inversify-typesafe-spring-like)
+        uses: codecov/codecov-action@v5
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        with:
+          flags: inversify-typesafe-spring-like
