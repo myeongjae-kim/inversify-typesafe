@@ -1,0 +1,66 @@
+{
+  "name": "inversify-typesafe-spring-like",
+  "type": "module",
+  "version": "0.1.0",
+  "description": "Add-On Library for inversify-typesafe to make it more like Spring.",
+  "source": "src/index.ts",
+  "exports": {
+    ".": {
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      },
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "types": "dist/index.d.ts",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "unpkg": "dist/index.umd.js",
+  "files": [
+    "dist/**/*",
+    "package.json"
+  ],
+  "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "setup": "husky install",
+    "clean": "rimraf dist",
+    "bundle": "microbundle --format modern,cjs,umd",
+    "typedoc": "typedoc src/index.ts --out docs/public/docs",
+    "build": "pnpm run clean && pnpm run bundle && sh ./scripts/generate-cts.sh && rimraf dist/index.d.ts\\'\\'",
+    "dev": "microbundle watch",
+    "prepublishOnly": "pnpm run test && pnpm run build",
+    "watch": "pnpm run clean && tsc -w",
+    "test": "vitest run --dir tests",
+    "test:watch": "vitest --dir tests",
+    "coverage": "vitest run --coverage --dir tests",
+    "prettier": "prettier . --write",
+    "lint": "eslint src/**",
+    "lint-staged": "lint-staged",
+    "check": "tsc --strict --noEmit --extendedDiagnostics",
+    "set-version": "sh ./scripts/set-version.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/myeongjae-kim/inversify-typesafe"
+  },
+  "homepage": "https://github.com/myeongjae-kim/inversify-typesafe",
+  "keywords": [
+    "inversify",
+    "spring",
+    "di",
+    "dependency injection",
+    "container"
+  ],
+  "author": "Myeongjae Kim",
+  "license": "MIT",
+  "dependencies": {
+    "inversify-typesafe": "^0.1.0"
+  }
+}
