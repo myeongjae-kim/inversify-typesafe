@@ -2,6 +2,10 @@
 
 <p align="center">
   Add-On Library for inversify-typesafe to make it more like <a href="https://spring.io/" target="_blank">Spring</a>.
+  <br/>
+  <a href="https://stackblitz.com/edit/inversify-typesafe-spring-like?file=test%2Fmain.test.ts" target="_blank">
+    <strong>See Demo</strong>
+  </a>
 </p>
 
 <p align="center">
