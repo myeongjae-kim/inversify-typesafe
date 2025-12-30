@@ -1,88 +1,84 @@
-import { beforeEach, describe, expect, expectTypeOf, it } from "vitest";
-import { TypesafeServiceConfig } from "../../../src";
-import { injectTypesafe } from "../../../tests/dependency-inversion.test";
-import { ApplicationContext, returnAutowired } from "../src";
+import { describe, expect, expectTypeOf, it } from "vitest";
+import { ApplicationContext, BeanConfig, returnAutowired } from "../src";
 
-// https://inversify.io/docs/introduction/dependency-inversion/
-interface Weapon {
-  damage: number;
+interface Article {
+  id: number;
+  title: string;
+  content: string;
 }
 
-class Katana implements Weapon {
-  public static creationCount = 0;
+interface ArticleOutgoingPort {
+  getById(id: number): Promise<Article>
+}
 
-  constructor() {
-    Katana.creationCount++;
+class ArticleRepository implements ArticleOutgoingPort {
+  getById(id: number): Promise<Article> {
+    return Promise.resolve({
+      id: id,
+      title: `title #${id}`,
+      content: `content #${id}`,
+    })
   }
-
-  public readonly damage: number = 10;
 }
 
-export const { Autowired } = returnAutowired<keyof Services>()
+interface GetArticleUseCase {
+  execute(id: number): Promise<Article>
+}
 
-class Ninja {
-  public static creationCount = 0;
+const { Autowired } = returnAutowired<keyof typeof beanConfig>();
 
+class ArticleQueryService implements GetArticleUseCase {
   constructor(
-    @Autowired("weaponServiceId") // compile error if a parameter value is not a key of Services
-    public readonly weapon: Weapon,
-  ) {
-    Ninja.creationCount++;
+    @Autowired("ArticleOutgoingPort")
+    private readonly articleOutgoingPort: ArticleOutgoingPort,
+  ) { }
+  execute(id: number): Promise<Article> {
+    return this.articleOutgoingPort.getById(id);
   }
 }
 
-export type Services = {
-  "ninjaServiceId": Ninja; // class
-  "weaponServiceId": Weapon; // interface
-};
+type Beans = {
+  GetArticleUseCase: GetArticleUseCase;
+  ArticleOutgoingPort: ArticleOutgoingPort;
+}
 
-export const serviceConfig: TypesafeServiceConfig<Services> = {
-  "ninjaServiceId": Ninja,
-  "weaponServiceId": Katana, // compile error if not compatible with Weapon
-};
+const beanConfig: BeanConfig<Beans> = {
+  GetArticleUseCase: ArticleQueryService,
+  ArticleOutgoingPort: ArticleRepository,
+}
 
 describe("Dependency Inversion Test", () => {
-  beforeEach(() => {
-    Ninja.creationCount = 0;
-    Katana.creationCount = 0;
-  })
+  it("should return type-safe service", async () => {
+    const applicationContext = new ApplicationContext(beanConfig);
 
+    const getArticleUseCase = applicationContext.get("GetArticleUseCase")
+    expectTypeOf(getArticleUseCase).toEqualTypeOf<GetArticleUseCase>()
 
-  it("should return type-safe service", () => {
-    const applicationContext = new ApplicationContext(serviceConfig);
-
-    expect(applicationContext.get("ninjaServiceId").weapon.damage).toBe(10);
-
-    // inferred type test
-    expectTypeOf(applicationContext.get("ninjaServiceId")).toEqualTypeOf<Ninja>();
-    expectTypeOf(applicationContext.get("weaponServiceId")).toEqualTypeOf<Weapon>();
-
-    // inferred parameter type test
-    expectTypeOf({} as Parameters<typeof applicationContext.get>[0]).toEqualTypeOf<"ninjaServiceId" | "weaponServiceId">();
-    expectTypeOf({} as Parameters<typeof injectTypesafe>[0]).toEqualTypeOf<"ninjaServiceId" | "weaponServiceId">();
+    const article = await getArticleUseCase.execute(1)
+    expect(article).toEqual({
+      id: 1,
+      title: "title #1",
+      content: "content #1",
+    })
   })
 
   it("should use Singleton scope as default", () => {
-    const applicationContext = new ApplicationContext(serviceConfig);
+    const applicationContext = new ApplicationContext(beanConfig);
 
-    const times = 2;
-    for (let i = 0; i < times; i++) {
-      applicationContext.get("ninjaServiceId");
-    }
+    const getArticleUseCase1 = applicationContext.get("GetArticleUseCase")
+    const getArticleUseCase2 = applicationContext.get("GetArticleUseCase")
 
-    expect(Ninja.creationCount).toBe(1);
-    expect(Katana.creationCount).toBe(1);
+    // same object because the default scope option is "Singleton"
+    expect(getArticleUseCase1).toBe(getArticleUseCase2)
   })
 
-  it("can override default scope", () => {
-    const applicationContext = new ApplicationContext(serviceConfig, { defaultScope: "Request" });
+  it("can override default scope of ApplicationContext", () => {
+    const applicationContext = new ApplicationContext(beanConfig, { defaultScope: "Request" });
 
-    const times = 2;
-    for (let i = 0; i < times; i++) {
-      applicationContext.get("ninjaServiceId");
-    }
+    const getArticleUseCase1 = applicationContext.get("GetArticleUseCase")
+    const getArticleUseCase2 = applicationContext.get("GetArticleUseCase")
 
-    expect(Ninja.creationCount).toBe(times);
-    expect(Katana.creationCount).toBe(times);
+    // different object because the scope option is "Request"
+    expect(getArticleUseCase1).not.toBe(getArticleUseCase2)
   })
 })
