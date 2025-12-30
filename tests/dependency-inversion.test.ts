@@ -1,6 +1,6 @@
 import { Container } from "inversify";
 import { describe, expect, expectTypeOf, it } from "vitest";
-import { ContainerTypesafe, returnInjectTypesafe, TypesafeServiceConfig } from "../src";
+import { returnTypesafeInject, TypesafeContainer, TypesafeServiceConfig } from "../src";
 
 // https://inversify.io/docs/introduction/dependency-inversion/
 interface Weapon {
@@ -11,7 +11,7 @@ class Katana implements Weapon {
   public readonly damage: number = 10;
 }
 
-export const injectTypesafe = returnInjectTypesafe<keyof Services>()
+export const injectTypesafe = returnTypesafeInject<keyof Services>()
 
 class Ninja {
   constructor(
@@ -32,7 +32,7 @@ export const serviceConfig: TypesafeServiceConfig<Services> = {
 
 describe("Dependency Inversion Test", () => {
   it("should return type-safe service", () => {
-    const typesafeContainer = new ContainerTypesafe(serviceConfig);
+    const typesafeContainer = new TypesafeContainer(serviceConfig);
 
     expect(typesafeContainer.get("ninjaServiceId").weapon.damage).toBe(10);
 
@@ -46,7 +46,7 @@ describe("Dependency Inversion Test", () => {
   })
 
   it("should return inversify container", () => {
-    const container = new ContainerTypesafe(serviceConfig);
+    const container = new TypesafeContainer(serviceConfig);
     expect(container.getContainer()).toBeDefined();
     expectTypeOf(container.getContainer()).toEqualTypeOf<Container>();
   })

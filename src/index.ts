@@ -4,9 +4,9 @@ export type TypesafeServiceConfig<S> = {
   [K in keyof S]: Newable<S[K]>;
 };
 
-export const returnInjectTypesafe = <Name extends string>() => (name: Name) => inject(name);
+export const returnTypesafeInject = <Name extends string>() => (name: Name) => inject(name);
 
-export class ContainerTypesafe<S extends Record<string, unknown>> {
+export class TypesafeContainer<S extends Record<string, unknown>> {
   private container: Container;
   constructor(
     serviceConfig: TypesafeServiceConfig<S>,
