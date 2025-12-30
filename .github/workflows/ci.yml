@@ -28,8 +28,11 @@ jobs:
       - name: Install
         run: pnpm install
 
-      - name: (coverage) Test
+      - name: (coverage) Test inversify-typesafe
         run: pnpm run coverage
+
+      - name: (coverage) Test inversify-typesafe-spring-like
+        run: cd packages/inversify-typesafe-spring-like && pnpm run coverage
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5

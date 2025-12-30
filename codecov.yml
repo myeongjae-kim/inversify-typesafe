@@ -1,0 +1,7 @@
+flags:
+  inversify-typesafe:  
+    paths:
+      - ./
+  inversify-typesafe-spring-like:
+    paths:
+      - ./packages/inversify-typesafe-spring-like
