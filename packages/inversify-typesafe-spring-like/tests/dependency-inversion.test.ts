@@ -49,7 +49,7 @@ const beanConfig: BeanConfig<Beans> = {
 
 describe("Dependency Inversion Test", () => {
   it("should return type-safe service", async () => {
-    const applicationContext = new ApplicationContext(beanConfig);
+    const applicationContext = ApplicationContext(beanConfig);
 
     const getArticleUseCase = applicationContext.get("GetArticleUseCase")
 
@@ -65,7 +65,7 @@ describe("Dependency Inversion Test", () => {
   })
 
   it("should use Singleton scope as default", () => {
-    const applicationContext = new ApplicationContext(beanConfig);
+    const applicationContext = ApplicationContext(beanConfig);
 
     const getArticleUseCase1 = applicationContext.get("GetArticleUseCase")
     const getArticleUseCase2 = applicationContext.get("GetArticleUseCase")
@@ -75,7 +75,7 @@ describe("Dependency Inversion Test", () => {
   })
 
   it("can override default scope of ApplicationContext", () => {
-    const applicationContext = new ApplicationContext(beanConfig, { defaultScope: "Request" });
+    const applicationContext = ApplicationContext(beanConfig, { defaultScope: "Request" });
 
     const getArticleUseCase1 = applicationContext.get("GetArticleUseCase")
     const getArticleUseCase2 = applicationContext.get("GetArticleUseCase")
