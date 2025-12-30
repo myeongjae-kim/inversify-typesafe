@@ -10,7 +10,7 @@ class Katana implements Weapon {
   public readonly damage: number = 10;
 }
 
-export const injectTypesafe = returnTypesafeInject<keyof Services>()
+export const injectTypesafe = returnTypesafeInject<Services>()
 
 class Ninja {
   constructor(
@@ -41,8 +41,11 @@ describe("Dependency Inversion Test", () => {
     expectTypeOf(typesafeContainer.get("ninjaServiceId")).toEqualTypeOf<Ninja>();
     expectTypeOf(typesafeContainer.get("weaponServiceId")).toEqualTypeOf<Weapon>();
 
-    // inferred parameter type test
-    expectTypeOf({} as Parameters<typeof typesafeContainer.get>[0]).toEqualTypeOf<"ninjaServiceId" | "weaponServiceId">();
-    expectTypeOf({} as Parameters<typeof injectTypesafe>[0]).toEqualTypeOf<"ninjaServiceId" | "weaponServiceId">();
+    // test first parameter type of get method
+    expectTypeOf({} as "ninjaServiceId" | "weaponServiceId").toExtend<Parameters<typeof typesafeContainer.get>[0]>();
+    expectTypeOf({} as string).not.toExtend<Parameters<typeof typesafeContainer.get>[0]>();
+
+    // test first parameter type of injectTypesafe decorator
+    expectTypeOf({} as "ninjaServiceId" | "weaponServiceId").toEqualTypeOf<Parameters<typeof injectTypesafe>[0]>();
   })
 })
