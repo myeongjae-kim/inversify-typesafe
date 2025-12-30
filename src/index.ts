@@ -1,7 +1,10 @@
 import { BindToFluentSyntax, Container, ContainerOptions, inject } from "inversify";
 
 export type TypesafeServiceConfig<S> = {
-  [K in keyof S]: ((bind: BindToFluentSyntax<S[K]>) => void);
+  [K in keyof S]: ((
+    bind: BindToFluentSyntax<S[K]>,
+    container: Omit<Container, "get"> & { get<T extends keyof S>(serviceName: T): S[T] }
+  ) => void);
 };
 
 export const returnTypesafeInject = <Name extends string>() => (name: Name) => inject(name);
@@ -15,7 +18,7 @@ export class TypesafeContainer<S extends Record<string, unknown>> {
     this.container = new Container(options);
 
     Object.entries(serviceConfig).forEach(([name, bindingFunction]) => {
-      bindingFunction(this.container.bind(name));
+      bindingFunction(this.container.bind(name), this.container);
     });
   }
 

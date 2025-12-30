@@ -26,8 +26,10 @@ export type Services = {
 };
 
 export const serviceConfig: TypesafeServiceConfig<Services> = {
-  "ninjaServiceId": (bind) => bind.to(Ninja), // compile error if not compatible with Ninja
-  "weaponServiceId": (bind) => bind.to(Katana), // compile error if not compatible with Katana
+  // compile error if not compatible with Ninja
+  "ninjaServiceId": (bind) => bind.to(Ninja),
+  // compile error if not compatible with Katana. Use the second parameter if you need to access the container
+  "weaponServiceId": (bind, _container) => bind.to(Katana),
 };
 
 describe("Dependency Inversion Test", () => {
