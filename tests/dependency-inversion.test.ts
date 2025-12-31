@@ -1,3 +1,4 @@
+import { ServiceIdentifier } from "inversify";
 import { describe, expect, expectTypeOf, it } from "vitest";
 import { createTypesafeContainer, returnTypesafeInject, TypesafeServiceConfig } from "../src";
 
@@ -47,5 +48,12 @@ describe("Dependency Inversion Test", () => {
 
     // test first parameter type of injectTypesafe decorator
     expectTypeOf({} as "ninjaServiceId" | "weaponServiceId").toEqualTypeOf<Parameters<typeof typesafeInject>[0]>();
+  })
+
+  it("should return type-safe service with _get method", () => {
+    const typesafeContainer = createTypesafeContainer(serviceConfig);
+    const ninjaServiceId = "ninjaServiceId" as ServiceIdentifier<Ninja>;
+
+    expect(typesafeContainer._get(ninjaServiceId).weapon.damage).toBe(10);
   })
 })
