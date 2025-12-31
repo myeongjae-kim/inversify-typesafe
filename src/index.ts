@@ -24,6 +24,5 @@ export const createTypesafeContainer = <S extends AbstractServiceMap>(
     bindingFunction(container.bind(name), container);
   });
 
-
   return container;
 };

@@ -32,7 +32,7 @@
     "setup": "husky install",
     "clean": "rimraf dist",
     "bundle": "microbundle --format modern,cjs,umd",
-    "typedoc": "typedoc src/index.ts --out docs/public/docs",
+    "typedoc": "typedoc src/index.ts --out docs/web/types",
     "build": "pnpm run clean && pnpm run bundle && sh ./scripts/generate-cts.sh && rimraf dist/index.d.ts\\'\\'",
     "dev": "microbundle watch",
     "prepublishOnly": "pnpm run test && pnpm run build",
@@ -61,7 +61,6 @@
   "author": "Myeongjae Kim",
   "license": "MIT",
   "devDependencies": {
-    "@types/inversify": "^2.0.33",
     "@typescript-eslint/eslint-plugin": "^8.50.1",
     "@typescript-eslint/parser": "^8.50.1",
     "@vitest/coverage-v8": "^4.0.16",

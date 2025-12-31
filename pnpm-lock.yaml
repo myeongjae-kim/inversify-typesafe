@@ -15,9 +15,6 @@ importers:
         specifier: ^0.2.2
         version: 0.2.2
     devDependencies:
-      '@types/inversify':
-        specifier: ^2.0.33
-        version: 2.0.33(reflect-metadata@0.2.2)
       '@typescript-eslint/eslint-plugin':
         specifier: ^8.50.1
         version: 8.50.1(@typescript-eslint/parser@8.50.1(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(typescript@5.9.3)
@@ -1082,10 +1079,6 @@ packages:
 
   '@types/hast@3.0.4':
     resolution: {integrity: sha512-WPs+bbQw5aCj+x6laNGWLH3wviHtoCv/P3+otBhbOhJgG8qtpdAMlTCxLtsTWA7LH1Oh/bFCHsBn0TPS5m30EQ==}
-
-  '@types/inversify@2.0.33':
-    resolution: {integrity: sha512-WAue6NmBkfjjdGKaGSSTZY9HeSao2xL5rEd3UgGtb5lWaAqe/GmrpCxsAoGvepx2Cg932QfqukJfrmH1uN4Ptw==}
-    deprecated: This is a stub types definition for inversify (http://inversify.io). inversify provides its own type definitions, so you don't need @types/inversify installed!
 
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
@@ -4334,12 +4327,6 @@ snapshots:
   '@types/hast@3.0.4':
     dependencies:
       '@types/unist': 3.0.3
-
-  '@types/inversify@2.0.33(reflect-metadata@0.2.2)':
-    dependencies:
-      inversify: 7.10.8(reflect-metadata@0.2.2)
-    transitivePeerDependencies:
-      - reflect-metadata
 
   '@types/json-schema@7.0.15': {}
 
