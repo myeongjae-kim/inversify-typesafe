@@ -139,11 +139,11 @@ export const serviceConfig: TypesafeServiceConfig<Services> = {
 
 This library provides a utility type called `TypesafeServiceConfig<T>`. `TypesafeServiceConfig<T>` constrains the keys of type `T` to be used as service IDs. Passing the previously declared `Services` type as the type parameter to `TypesafeServiceConfig` restricts usage to only the keys of the `Services` type. If you enter a key that does not exist in `Services` or do not provide a function for every key in `Services`, a compile-time error occurs, allowing users to write code more safely.
 
-The object's values use lambdas to allow users to utilize all binding features of Inversify. The lambda accepts `bind` as the first parameter and `container` as the second. The first parameter is the return value of the `container.bind(serviceId)` function. Since the result of binding the object's key as a service ID is passed as a parameter, the user can choose how to map the service to the service ID. If the user attempts to map a service that is incompatible with the `Services` type declaration, a compile-time error occurs.
+The object's values use lambdas to allow users to utilize all binding features of Inversify. The lambda accepts `bind` as the first parameter and `container` as the second. The first parameter is a [thunk](https://en.wikipedia.org/wiki/Thunk) `() => container.bind(serviceId)` to bind the service ID to the container. Since the thunk to bind the object's key as a service ID is passed as a parameter, the user can choose how to map a service to the service ID. If the user attempts to map a service that is incompatible with the `Services` type declaration, a compile-time error occurs.
 
 <img src="./docs/resources/service-config-compile-error.png" alt="" width="707" />
 
-The lambda's second parameter receives `container`. Usually, using only the first parameter `bind` is sufficient, but you can utilize the second parameter if you need to access the container directly during the service registration process.
+The lambda's second parameter receives `container`. For simple cases, using only the first parameter `bind` is sufficient, but you can utilize the second parameter if you need to access the container directly during the service registration process.
 
 ### 3. Create Typesafe Container
 
