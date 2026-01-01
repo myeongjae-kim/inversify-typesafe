@@ -9,7 +9,7 @@ export type TypesafeContainer<S extends AbstractServiceMap> = Omit<Container, "g
 };
 
 export type TypesafeServiceConfig<S extends AbstractServiceMap> = {
-  [K in keyof S]: ((bind: () => BindToFluentSyntax<S[K]>, container: TypesafeContainer<S>) => void) | undefined;
+  [K in keyof S]: ((bind: () => BindToFluentSyntax<S[K]>, container: TypesafeContainer<S>) => void);
 };
 
 export const returnTypesafeInject = <S extends AbstractServiceMap>() => (name: Extract<keyof S, string>) => inject(name);
@@ -22,7 +22,7 @@ export const createTypesafeContainer = <S extends AbstractServiceMap>(
   container._get = container.get;
 
   Object.entries(serviceConfig).forEach(([name, bindingFunction]) => {
-    bindingFunction && bindingFunction(() => container.bind(name), container);
+    bindingFunction(() => container.bind(name), container);
   });
 
   return container;
