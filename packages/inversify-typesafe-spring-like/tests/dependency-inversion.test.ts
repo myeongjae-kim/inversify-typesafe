@@ -43,8 +43,8 @@ type Beans = {
 }
 
 const beanConfig: BeanConfig<Beans> = {
-  GetArticleUseCase: (bind) => bind.to(ArticleQueryService), // compile error if ArticleQueryService is not compatible with GetArticleUseCase.
-  ArticleOutgoingPort: (bind) => bind.to(ArticleRepository), // compile error if ArticleRepository is not compatible with ArticleOutgoingPort.
+  GetArticleUseCase: (bind) => bind().to(ArticleQueryService), // compile error if ArticleQueryService is not compatible with GetArticleUseCase.
+  ArticleOutgoingPort: (bind) => bind().to(ArticleRepository), // compile error if ArticleRepository is not compatible with ArticleOutgoingPort.
 }
 
 describe("Dependency Inversion Test", () => {
