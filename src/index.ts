@@ -1,14 +1,15 @@
-import { BindToFluentSyntax, Container, ContainerOptions, inject } from "inversify";
+import { BindToFluentSyntax, Container, ContainerOptions, GetOptions, inject, OptionalGetOptions } from "inversify";
 
 type AbstractServiceMap = Record<string, unknown>;
 
 export type TypesafeContainer<S extends AbstractServiceMap> = Omit<Container, "get"> & {
-  get<T extends keyof S>(serviceName: T): S[T];
+  get<T extends keyof S>(serviceIdentifier: T, options: OptionalGetOptions): S[T] | undefined;
+  get<T extends keyof S>(serviceIdentifier: T, options?: GetOptions): S[T];
   _get: Container["get"];
 };
 
 export type TypesafeServiceConfig<S extends AbstractServiceMap> = {
-  [K in keyof S]: ((bind: () => BindToFluentSyntax<S[K]>, container: TypesafeContainer<S>) => void);
+  [K in keyof S]: ((bind: () => BindToFluentSyntax<S[K]>, container: TypesafeContainer<S>) => void) | undefined;
 };
 
 export const returnTypesafeInject = <S extends AbstractServiceMap>() => (name: Extract<keyof S, string>) => inject(name);
@@ -21,7 +22,7 @@ export const createTypesafeContainer = <S extends AbstractServiceMap>(
   container._get = container.get;
 
   Object.entries(serviceConfig).forEach(([name, bindingFunction]) => {
-    bindingFunction(() => container.bind(name), container);
+    bindingFunction && bindingFunction(() => container.bind(name), container);
   });
 
   return container;

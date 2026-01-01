@@ -1,4 +1,4 @@
-import { ServiceIdentifier } from "inversify";
+import { injectable, named, ServiceIdentifier } from "inversify";
 import { describe, expect, expectTypeOf, it } from "vitest";
 import { createTypesafeContainer, returnTypesafeInject, TypesafeServiceConfig } from "../src";
 
@@ -55,5 +55,37 @@ describe("Dependency Inversion Test", () => {
     const ninjaServiceId = "ninjaServiceId" as ServiceIdentifier<Ninja>;
 
     expect(typesafeContainer._get(ninjaServiceId).weapon.damage).toBe(10);
+  })
+
+  it("should handle named services", () => {
+    class Shuriken implements Weapon {
+      public readonly damage = 20;
+    }
+
+    @injectable()
+    class AnotherNinja {
+      constructor(
+        @typesafeInject("weaponServiceId")
+        @named("Shuriken")
+        public readonly weapon: Weapon,
+      ) { }
+    }
+
+    const anotherServiceConfig: TypesafeServiceConfig<Services> = {
+      "ninjaServiceId": (bind) => bind().to(AnotherNinja),
+      "weaponServiceId": (bind, _container) => {
+        bind().to(Katana).whenNamed("Katana");
+        bind().to(Shuriken).whenNamed("Shuriken");
+      },
+    }
+
+    const typesafeContainer = createTypesafeContainer(anotherServiceConfig);
+
+    expect(typesafeContainer.get("ninjaServiceId").weapon.damage).toBe(20);
+    expect(typesafeContainer.get("weaponServiceId", { name: "Katana" }).damage).toBe(10);
+    expect(typesafeContainer.get("weaponServiceId", { name: "Shuriken" }).damage).toBe(20);
+
+    expect(() => typesafeContainer.get("weaponServiceId")).toThrow('No bindings found for service: "weaponServiceId".');
+    expect(typesafeContainer.get("weaponServiceId", { optional: true, name: undefined })).toBeUndefined();
   })
 })
