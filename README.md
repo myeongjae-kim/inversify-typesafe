@@ -141,7 +141,7 @@ This library provides a utility type called `TypesafeServiceConfig<T>`. `Typesaf
 
 The object's values use lambdas to allow users to utilize all binding features of Inversify. The lambda accepts `bind` as the first parameter and `container` as the second. The first parameter is the return value of the `container.bind(serviceId)` function. Since the result of binding the object's key as a service ID is passed as a parameter, the user can choose how to map the service to the service ID. If the user attempts to map a service that is incompatible with the `Services` type declaration, a compile-time error occurs.
 
-<img src="./docs/resources/service-config-compile-error.png" alt="" width="688" />
+<img src="./docs/resources/service-config-compile-error.png" alt="" width="707" />
 
 The lambda's second parameter receives `container`. Usually, using only the first parameter `bind` is sufficient, but you can utilize the second parameter if you need to access the container directly during the service registration process.
 
