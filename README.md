@@ -53,9 +53,9 @@ export type Services = {
 
 export const serviceConfig: TypesafeServiceConfig<Services> = {
   // compile error if not compatible with Ninja
-  "ninjaServiceId": (bind) => bind.to(Ninja),
+  "ninjaServiceId": (bind) => bind().to(Ninja),
   // compile error if not compatible with Katana. Use the second parameter if you need to access the container
-  "weaponServiceId": (bind, _container) => bind.to(Katana),
+  "weaponServiceId": (bind, _container) => bind().to(Katana),
 };
 
 const typesafeContainer = createTypesafeContainer(serviceConfig);
@@ -132,8 +132,8 @@ Users should write `Services`(or whatever name you want) map type to declare the
 import { TypesafeServiceConfig } from "inversify-typesafe";
 
 export const serviceConfig: TypesafeServiceConfig<Services> = {
-  "ninjaServiceId": (bind) => bind.to(Ninja),
-  "weaponServiceId": (bind, _container) => bind.to(Katana),
+  "ninjaServiceId": (bind) => bind().to(Ninja),
+  "weaponServiceId": (bind, _container) => bind().to(Katana),
 };
 ```
 
