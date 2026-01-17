@@ -54,6 +54,9 @@ importers:
 
   packages/inversify-typesafe-spring-like:
     dependencies:
+      inversify:
+        specifier: ^7.10.8
+        version: 7.10.8(reflect-metadata@0.2.2)
       inversify-typesafe:
         specifier: ^0.5.4
         version: 0.5.4
