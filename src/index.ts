@@ -12,7 +12,7 @@ export type TypesafeServiceConfig<S extends AbstractServiceMap> = {
   [K in keyof S]: ((bind: () => BindToFluentSyntax<S[K]>, container: TypesafeContainer<S>) => void);
 };
 
-export const returnTypesafeInject = <S extends AbstractServiceMap>() => (name: Extract<keyof S, string>) => inject(name);
+export const returnTypesafeInject = <S extends AbstractServiceMap>() => (name: Extract<keyof S, string>): ReturnType<typeof inject> => inject(name);
 
 export const createTypesafeContainer = <S extends AbstractServiceMap>(
   serviceConfig: TypesafeServiceConfig<S>,
