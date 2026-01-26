@@ -128,6 +128,83 @@ The API is designed to mirror Spring's terminology:
 
 For complete usage documentation and advanced features, please refer to the [inversify-typesafe documentation](https://github.com/myeongjae-kim/inversify-typesafe/tree/main?tab=readme-ov-file#usage).
 
+## Advanced Patterns
+
+### Lazy ApplicationContext Initialization
+
+In production applications, you may want to defer the initialization of the ApplicationContext until it's actually needed. This is especially useful in serverless environments or when you want to avoid initialization overhead during module loading.
+
+**The `lazy` utility function:**
+
+```ts
+// core/common/util/lazy.ts
+export const lazy = <T>(fn: () => T) => {
+  let value: T | undefined;
+  return () => value ?? (value = fn());
+};
+```
+
+**Usage with ApplicationContext:**
+
+```ts
+// core/config/applicationContext.ts
+import 'reflect-metadata';
+import { ApplicationContext } from 'inversify-typesafe-spring-like';
+import { beanConfig } from './beanConfig';
+import { lazy } from '../common/util/lazy';
+
+// Lazy initialization - ApplicationContext is created only when first accessed
+export const applicationContext = lazy(() => ApplicationContext(beanConfig));
+```
+
+**Using in controllers or services:**
+
+```ts
+// app/api/articles/GetArticleController.ts
+import { applicationContext } from '@/core/config/applicationContext';
+
+export default async function handler(req: Request) {
+  // ApplicationContext is initialized on first call, then reused
+  const useCase = applicationContext().get("GetArticleUseCase");
+  const article = await useCase.execute(req.params.id);
+  return Response.json(article);
+}
+```
+
+**Why use lazy initialization?**
+
+| Benefit | Description |
+|---------|-------------|
+| Faster cold starts | Module loading doesn't trigger DI container initialization |
+| On-demand creation | Container is only created when actually needed |
+| Singleton guarantee | Multiple calls return the same instance |
+| Testability | Easy to mock or replace in tests |
+
+**Without lazy (eager initialization):**
+
+```ts
+// ❌ Container is created immediately when module is imported
+export const applicationContext = ApplicationContext(beanConfig);
+
+// Every import of this module triggers initialization
+import { applicationContext } from './applicationContext';
+```
+
+**With lazy (deferred initialization):**
+
+```ts
+// ✅ Container is created only when applicationContext() is called
+export const applicationContext = lazy(() => ApplicationContext(beanConfig));
+
+// Import doesn't trigger initialization
+import { applicationContext } from './applicationContext';
+
+// Initialization happens here, on first use
+const useCase = applicationContext().get("GetArticleUseCase");
+```
+
+**Note:** The `lazy` function ensures the initialization function is called exactly once, and subsequent calls return the cached value.
+
 ## License
 
 MIT © [Myeongjae Kim](https://myeongjae.kim)
