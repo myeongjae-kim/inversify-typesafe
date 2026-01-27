@@ -202,6 +202,80 @@ class ArticleQueryService implements GetArticleUseCase {
 - Type safety is maintained within each domain's scope
 - Easy to identify which beans belong to which domain
 
+### Reusing a Single Class for Multiple Interfaces with `toResolvedValue`
+
+When a single class implements multiple interfaces (e.g., both `QueryPort` and `CommandPort`), you can use `toResolvedValue` to register the same instance under different bean names. This avoids creating separate instances and ensures consistency.
+
+```ts
+import { ApplicationContext, BeanConfig, returnAutowired } from "inversify-typesafe-spring-like";
+
+// Interfaces
+interface StayQueryPort {
+  findById(id: number): Promise<Stay | null>;
+  findAll(): Promise<Stay[]>;
+}
+
+interface StayCommandPort {
+  save(stay: Stay): Promise<Stay>;
+  delete(id: number): Promise<void>;
+}
+
+// Single class implementing both interfaces
+class StayPersistenceAdapter implements StayQueryPort, StayCommandPort {
+  async findById(id: number): Promise<Stay | null> { /* ... */ }
+  async findAll(): Promise<Stay[]> { /* ... */ }
+  async save(stay: Stay): Promise<Stay> { /* ... */ }
+  async delete(id: number): Promise<void> { /* ... */ }
+}
+
+type Beans = {
+  StayQueryPort: StayQueryPort;
+  StayCommandPort: StayCommandPort;
+};
+
+const { Autowired } = returnAutowired<Beans>();
+
+const beanConfig: BeanConfig<Beans> = {
+  // Register the class for the first interface
+  StayQueryPort: (bind) => bind().to(StayPersistenceAdapter),
+
+  // Reuse the same instance for the second interface
+  StayCommandPort: (bind) =>
+    bind().toResolvedValue(
+      (queryPort) => queryPort as StayCommandPort,  // Transform function
+      ['StayQueryPort']  // Dependencies to resolve first
+    ),
+};
+
+const applicationContext = ApplicationContext(beanConfig);
+
+// Both return the same instance
+const queryPort = applicationContext.get("StayQueryPort");
+const commandPort = applicationContext.get("StayCommandPort");
+
+console.log(queryPort === commandPort);  // true (same instance)
+```
+
+**How `toResolvedValue` works:**
+
+```ts
+bind().toResolvedValue(transformFn, dependencies)
+```
+
+- `transformFn`: A function that receives the resolved dependencies and returns the value to bind
+- `dependencies`: An array of bean names to resolve before calling the transform function
+
+**Use cases:**
+- Single class implementing multiple interfaces (CQRS pattern)
+- Creating derived beans from existing beans
+- Aliasing beans under different names
+- Lazy transformation of resolved dependencies
+
+**Benefits:**
+- Avoids duplicate instances when the same class serves multiple roles
+- Maintains singleton behavior across interface boundaries
+- Clear dependency declaration for complex wiring scenarios
+
 ## License
 
 MIT © [Myeongjae Kim](https://myeongjae.kim)
