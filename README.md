@@ -208,6 +208,45 @@ https://github.com/myeongjae-kim/inversify-typesafe/tree/main/packages/inversify
 
 Try it out on <a href="https://stackblitz.com/edit/inversify-typesafe-spring-like?file=test%2Fmain.test.ts" target="_blank">Stickblitz</a>.
 
+## Contributing
+
+### Code Quality Process
+
+When making changes to the codebase, follow this verification process before committing:
+
+```bash
+# 1. Run linting
+pnpm lint
+
+# 2. Build the project
+pnpm build
+
+# 3. Run tests (ensure 100% coverage is maintained)
+pnpm test
+
+# 4. If all checks pass, commit your changes
+git add .
+git commit -m "type(scope): description"
+```
+
+| Step | Command | Purpose |
+|------|---------|---------|
+| 1 | `pnpm lint` | Code style and static analysis |
+| 2 | `pnpm build` | TypeScript compilation |
+| 3 | `pnpm test` | Unit tests with 100% coverage |
+| 4 | `git commit` | Commit verified code |
+
+**Commit Message Convention:**
+
+Follow the [Conventional Commits](https://www.conventionalcommits.org/) format:
+
+- `feat`: New feature
+- `fix`: Bug fix
+- `docs`: Documentation changes
+- `refactor`: Code refactoring
+- `test`: Test changes
+- `chore`: Build/config changes
+
 ## License
 
 MIT © [Myeongjae Kim](https://myeongjae.kim)
