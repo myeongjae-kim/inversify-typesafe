@@ -128,6 +128,80 @@ The API is designed to mirror Spring's terminology:
 
 For complete usage documentation and advanced features, please refer to the [inversify-typesafe documentation](https://github.com/myeongjae-kim/inversify-typesafe/tree/main?tab=readme-ov-file#usage).
 
+## Advanced Patterns
+
+### Domain-Specific BeanConfig
+
+As your application grows, you may want to organize beans by domain. This pattern allows each domain module to define its own beans while extending a common configuration.
+
+```ts
+// core/config/CommonBeanConfig.ts
+import { BeanConfig } from "inversify-typesafe-spring-like";
+
+interface LoggingPort {
+  log(message: string): void;
+}
+
+class ConsoleLogger implements LoggingPort {
+  log(message: string): void {
+    console.log(`[LOG] ${message}`);
+  }
+}
+
+export type CommonBeans = {
+  LoggingPort: LoggingPort;
+};
+
+export const commonBeanConfig: BeanConfig<CommonBeans> = {
+  LoggingPort: (bind) => bind().to(ConsoleLogger),
+};
+```
+
+```ts
+// core/article/config/ArticleBeanConfig.ts
+import { BeanConfig, returnAutowired } from "inversify-typesafe-spring-like";
+import { CommonBeans, commonBeanConfig } from "../config/CommonBeanConfig";
+
+interface ArticleQueryPort { /* ... */ }
+interface ArticleCommandPort { /* ... */ }
+interface GetArticleUseCase { /* ... */ }
+
+// Extend CommonBeans with domain-specific beans
+export type ArticleBeans = CommonBeans & {
+  ArticleQueryPort: ArticleQueryPort;
+  ArticleCommandPort: ArticleCommandPort;
+  GetArticleUseCase: GetArticleUseCase;
+};
+
+// Domain-specific Autowired decorator
+export const { Autowired: ArticleAutowired } = returnAutowired<ArticleBeans>();
+
+export const articleBeanConfig: BeanConfig<ArticleBeans> = {
+  ...commonBeanConfig,  // Include common beans
+  ArticleQueryPort: (bind) => bind().to(ArticlePersistenceAdapter),
+  ArticleCommandPort: (bind) => bind().to(ArticlePersistenceAdapter),
+  GetArticleUseCase: (bind) => bind().to(ArticleQueryService),
+};
+```
+
+```ts
+// Usage in domain service
+class ArticleQueryService implements GetArticleUseCase {
+  constructor(
+    @ArticleAutowired("ArticleQueryPort")  // Type-safe within ArticleBeans
+    private readonly articleQueryPort: ArticleQueryPort,
+    @ArticleAutowired("LoggingPort")  // Common beans are also available
+    private readonly loggingPort: LoggingPort,
+  ) { }
+}
+```
+
+**Benefits:**
+- Each domain owns its bean configuration
+- Common beans (logging, transactions, etc.) are shared across domains
+- Type safety is maintained within each domain's scope
+- Easy to identify which beans belong to which domain
+
 ## License
 
 MIT © [Myeongjae Kim](https://myeongjae.kim)
