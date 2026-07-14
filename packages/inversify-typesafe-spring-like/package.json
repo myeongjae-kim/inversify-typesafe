@@ -61,7 +61,7 @@
   "author": "Myeongjae Kim",
   "license": "MIT",
   "dependencies": {
-    "inversify-typesafe": "workspace:*"
+    "inversify-typesafe": "^0.5.9"
   },
   "devDependencies": {
     "inversify": "^8.1.3",
