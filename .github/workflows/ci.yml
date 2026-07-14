@@ -31,6 +31,11 @@ jobs:
       - name: (coverage) Test inversify-typesafe
         run: pnpm run coverage
 
+      # The spring-like package resolves this workspace dependency through its
+      # published exports, which point at the root package's dist directory.
+      - name: Build inversify-typesafe for workspace consumers
+        run: pnpm --filter inversify-typesafe build
+
       - name: (coverage) Test inversify-typesafe-spring-like
         run: cd packages/inversify-typesafe-spring-like && pnpm run coverage
 
