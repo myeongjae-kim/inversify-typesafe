@@ -19,3 +19,10 @@ for file in $files; do
   cat "$file" | jq ".version = \"$VERSION\"" > "$file.tmp"
   rm "$file" && mv "$file.tmp" "$file"
 done
+
+files=$(find packages -type f -name "jsr.json");
+
+for file in $files; do
+  cat "$file" | jq ".version = \"$VERSION\"" > "$file.tmp"
+  rm "$file" && mv "$file.tmp" "$file"
+done
