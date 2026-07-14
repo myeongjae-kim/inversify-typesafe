@@ -1,7 +1,7 @@
 {
   "name": "inversify-typesafe",
   "type": "module",
-  "version": "0.5.7",
+  "version": "0.5.8",
   "description": "Boost InversifyJS with Type Safety.",
   "source": "src/index.ts",
   "exports": {
