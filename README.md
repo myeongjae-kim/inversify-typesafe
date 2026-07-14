@@ -63,6 +63,23 @@ const typesafeContainer = createTypesafeContainer(serviceConfig);
 console.log(typesafeContainer.get("ninjaServiceId").weapon.damage);
 ```
 
+## TL;DR
+
+`inversify-typesafe` adds compile-time type safety to InversifyJS without limiting its features. Define a `Services` map, register each service with `TypesafeServiceConfig`, and create a container with `createTypesafeContainer`. Service IDs are then autocompleted and their return types are inferred, while unknown IDs and incompatible bindings fail at compile time.
+
+<details>
+<summary><strong>For AI Agents Using This Library</strong></summary>
+
+- Define one `Services` map whose string keys are service IDs and whose values are the types returned for those IDs.
+- Declare a `TypesafeServiceConfig<Services>` containing every key in `Services`, and bind each key to a compatible implementation with the provided `bind()` function.
+- Pass the config to `createTypesafeContainer`; let TypeScript infer the container type instead of adding a generic argument manually.
+- Resolve services with `container.get("serviceId")`. Do not cast service IDs or result types, because doing so bypasses the library's compile-time checks.
+- For constructor injection, create a project-local decorator with `returnTypesafeInject<Services>()` and use it instead of InversifyJS's `inject` for mapped service IDs.
+- Use `container._get(...)` only when the original InversifyJS `get` API is required, such as for class or symbol identifiers. All other container methods retain their normal InversifyJS behavior.
+- Keep the `Services` map, service config, `get` calls, and injection decorators synchronized whenever a service is added, removed, or renamed.
+
+</details>
+
 ## Background
 
 [InversifyJS](https://inversify.io/) is a powerful and lightweight inversion of control container for JavaScript & Node.js apps powered by TypeScript. Although it is excellent on its own, adding a few more type declarations allows you to write more type-safe code by leveraging TypeScript's powerful type system. Wouldn't it be great if entering just a service ID automatically infers type of the service, and if entering an unregistered service ID could be magically detected at compile time? I wrote this library to create a type-safe container by exploiting [TypeScript's String Literal Types](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#literal-types) and introduce a service registration method inspired by [Spring](https://spring.io/).
