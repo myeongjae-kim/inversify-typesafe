@@ -16,13 +16,6 @@ rm jsr.json && mv jsr.json.tmp jsr.json
 files=$(find packages -type f -name "package.json");
 
 for file in $files; do
-  cat "$file" | jq ".version = \"$VERSION\"" | jq ".peerDependencies.\"inversify-typesafe\" = \"^$VERSION\"" > "$file.tmp"
-  rm "$file" && mv "$file.tmp" "$file"
-done
-
-files=$(find packages -type f -name "jsr.json");
-
-for file in $files; do
   cat "$file" | jq ".version = \"$VERSION\"" | jq ".dependencies.\"inversify-typesafe\" = \"^$VERSION\"" > "$file.tmp"
   rm "$file" && mv "$file.tmp" "$file"
 done

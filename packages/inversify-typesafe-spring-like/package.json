@@ -60,12 +60,14 @@
   ],
   "author": "Myeongjae Kim",
   "license": "MIT",
+  "dependencies": {
+    "inversify-typesafe": "^0.5.8"
+  },
   "devDependencies": {
     "inversify": "^8.1.3",
     "inversify-typesafe": "workspace:*"
   },
   "peerDependencies": {
-    "inversify": ">=7.0.0",
-    "inversify-typesafe": "^0.5.8"
+    "inversify": ">=7.0.0"
   }
 }

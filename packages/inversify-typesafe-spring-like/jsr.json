@@ -2,8 +2,5 @@
   "name": "@myeongjae-kim/inversify-typesafe-spring-like",
   "version": "0.5.8",
   "license": "MIT",
-  "exports": "./src/index.ts",
-  "dependencies": {
-    "inversify-typesafe": "^0.5.8"
-  }
+  "exports": "./src/index.ts"
 }
