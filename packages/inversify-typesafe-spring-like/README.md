@@ -84,6 +84,24 @@ const getArticleUseCase = applicationContext.get("GetArticleUseCase")
 getArticleUseCase.execute(1).then(console.log)
 ```
 
+## TL;DR
+
+`inversify-typesafe-spring-like` is a Spring-flavored add-on for `inversify-typesafe`. Define a `Beans` map, register every bean with `BeanConfig`, create an `Autowired` decorator with `returnAutowired`, and initialize the container with `ApplicationContext`. Bean names are checked and return types are inferred at compile time, while beans use singleton scope by default.
+
+<details>
+<summary><strong>For AI Agents Using This Library</strong></summary>
+
+- Define one `Beans` map whose string keys are bean names and whose values are the types returned for those names.
+- Declare a `BeanConfig<Beans>` containing every key in `Beans`, and bind each key to a compatible implementation with the provided `bind()` function.
+- Create a project-local decorator by destructuring `const { Autowired } = returnAutowired<Beans>()`, then use `@Autowired("BeanName")` for constructor injection.
+- Pass the bean config to `ApplicationContext`; let TypeScript infer the context type instead of adding a generic argument manually.
+- Resolve beans with `applicationContext.get("BeanName")`. Do not cast bean names or result types, because doing so bypasses compile-time checks.
+- Assume singleton scope unless an explicit `ContainerOptions` argument passed to `ApplicationContext` overrides `defaultScope`.
+- Use the underlying `inversify-typesafe` capabilities for advanced bindings and the original InversifyJS API. `BeanConfig`, `ApplicationContext`, and `returnAutowired` correspond to `TypesafeServiceConfig`, `createTypesafeContainer`, and `returnTypesafeInject` respectively.
+- Keep the `Beans` map, bean config, `get` calls, and `Autowired` decorators synchronized whenever a bean is added, removed, or renamed.
+
+</details>
+
 ## Introduction
 
 This library extends [inversify-typesafe](https://github.com/myeongjae-kim/inversify-typesafe) to provide a development experience similar to [Spring Framework](https://spring.io/).
