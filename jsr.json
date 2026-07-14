@@ -1,6 +1,6 @@
 {
   "name": "@myeongjae-kim/inversify-typesafe",
-  "version": "0.5.8",
+  "version": "0.5.9",
   "license": "MIT",
   "exports": "./src/index.ts"
 }
