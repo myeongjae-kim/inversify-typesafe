@@ -57,6 +57,18 @@ describe("Dependency Inversion Test", () => {
     expect(typesafeContainer._get(ninjaServiceId).weapon.damage).toBe(10);
   })
 
+  it("should keep _get bound to the container when detached", () => {
+    const typesafeContainer = createTypesafeContainer(serviceConfig);
+    const ninjaServiceId = "ninjaServiceId" as ServiceIdentifier<Ninja>;
+
+    // _get must stay callable when detached from the container (destructured or passed as a callback)
+    const { _get } = typesafeContainer;
+    expect(_get(ninjaServiceId).weapon.damage).toBe(10);
+
+    const runGet = (get: typeof typesafeContainer._get) => get(ninjaServiceId);
+    expect(runGet(typesafeContainer._get).weapon.damage).toBe(10);
+  })
+
   it("should handle named services", () => {
     class Shuriken implements Weapon {
       public readonly damage = 20;
