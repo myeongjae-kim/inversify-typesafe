@@ -2,6 +2,7 @@
   "name": "inversify-typesafe",
   "type": "module",
   "version": "0.5.12",
+  "packageManager": "pnpm@11.13.0",
   "description": "Boost InversifyJS with Type Safety.",
   "source": "src/index.ts",
   "exports": {
@@ -28,7 +29,6 @@
     "package.json"
   ],
   "scripts": {
-    "preinstall": "npx only-allow pnpm",
     "setup": "husky install",
     "clean": "rimraf dist",
     "bundle": "microbundle --format modern,cjs,umd",
