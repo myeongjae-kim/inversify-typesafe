@@ -3,6 +3,6 @@ packages:
 allowBuilds:
   inversify-typesafe: false
 minimumReleaseAgeExclude:
-  - inversify-typesafe@0.5.9
+  - inversify-typesafe@0.5.9 || 0.5.10
 overrides:
   rollup-plugin-typescript2: 0.37.0
