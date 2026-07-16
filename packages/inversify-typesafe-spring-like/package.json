@@ -25,7 +25,8 @@
   "unpkg": "dist/index.umd.js",
   "files": [
     "dist/**/*",
-    "package.json"
+    "package.json",
+    "docs/**/*.md"
   ],
   "scripts": {
     "preinstall": "npx only-allow pnpm",

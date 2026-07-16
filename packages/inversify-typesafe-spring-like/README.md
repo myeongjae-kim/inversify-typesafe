@@ -100,6 +100,26 @@ getArticleUseCase.execute(1).then(console.log)
 
 `inversify-typesafe-spring-like` is a Spring-flavored add-on for `inversify-typesafe`. Define separate `UseCaseBeans` and `InfraBeans` maps, combine them into `Beans`, register every bean with `BeanConfig`, and create an `Autowired` decorator with `returnAutowired`. Initialize the container with `ApplicationContext`, and resolve only use cases through a `getUseCase` helper at application entry points. Bean names are checked and return types are inferred at compile time, while beans use singleton scope by default.
 
+See the packaged [use-case beans guide](./docs/use-case-beans.md) for the complete recommended structure.
+
+## AI Agent Setup
+
+Add the following block to the consuming project's `AGENTS.md` or `CLAUDE.md` so coding agents read this library's guidance before changing dependency-injection code. Installing this library does not create or modify either file automatically.
+
+```md
+<!-- BEGIN:inversify-typesafe-spring-like-agent-rules -->
+# `inversify-typesafe-spring-like` rules
+
+Before adding or changing dependency-injection code, read `node_modules/inversify-typesafe-spring-like/docs/index.md` and the guide that matches the task.
+
+- Use `UseCaseBeans` and `InfraBeans` as separate maps. Combine them for container setup, and expose use cases through `getUseCase` at application entry points.
+- Read `node_modules/inversify-typesafe-spring-like/docs/lazy-application-context.md` when container creation should be deferred, such as in serverless applications.
+- Read `node_modules/inversify-typesafe-spring-like/docs/domain-specific-bean-config.md` when a domain owns its own bean configuration while sharing common beans.
+- Read `node_modules/inversify-typesafe-spring-like/docs/to-resolved-value.md` when one instance must be exposed through multiple bean keys.
+- Do not bypass bean-key or resolved-value type checking with casts. Keep bean maps, `BeanConfig`, `Autowired`, and `getUseCase` definitions synchronized when bean names change.
+<!-- END:inversify-typesafe-spring-like-agent-rules -->
+```
+
 <details>
 <summary><strong>For AI Agents Using This Library</strong></summary>
 
@@ -161,6 +181,8 @@ For complete usage documentation and advanced features, please refer to the [inv
 ## Advanced Patterns
 
 ### Lazy ApplicationContext Initialization
+
+For a self-contained reference, see the packaged [lazy ApplicationContext guide](./docs/lazy-application-context.md).
 
 In production applications, you may want to defer the initialization of the ApplicationContext until it's actually needed. This is especially useful in serverless environments or when you want to avoid initialization overhead during module loading.
 
@@ -237,6 +259,8 @@ const useCase = applicationContext().get("GetArticleUseCase");
 
 ### Domain-Specific BeanConfig
 
+For a self-contained reference, see the packaged [domain-specific BeanConfig guide](./docs/domain-specific-bean-config.md).
+
 As your application grows, you may want to organize beans by domain. This pattern allows each domain module to define its own beans while extending a common configuration.
 
 ```ts
@@ -308,6 +332,8 @@ class ArticleQueryService implements GetArticleUseCase {
 - Easy to identify which beans belong to which domain
 
 ### Reusing a Single Class for Multiple Interfaces with `toResolvedValue`
+
+For a self-contained reference, see the packaged [`toResolvedValue` guide](./docs/to-resolved-value.md).
 
 When a single class implements multiple interfaces (e.g., both `QueryPort` and `CommandPort`), you can use `toResolvedValue` to register the same instance under different bean names. This avoids creating separate instances and ensures consistency.
 
