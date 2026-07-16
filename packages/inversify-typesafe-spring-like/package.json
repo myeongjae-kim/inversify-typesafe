@@ -1,7 +1,7 @@
 {
   "name": "inversify-typesafe-spring-like",
   "type": "module",
-  "version": "0.5.9",
+  "version": "0.5.10",
   "description": "Add-On Library for inversify-typesafe to make it more like Spring.",
   "source": "src/index.ts",
   "exports": {
