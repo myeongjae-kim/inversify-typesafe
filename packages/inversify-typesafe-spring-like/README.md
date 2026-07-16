@@ -65,10 +65,15 @@ class ArticleQueryService implements GetArticleUseCase {
   }
 }
 
-type Beans = {
+type UseCaseBeans = {
   GetArticleUseCase: GetArticleUseCase; // interface (class is also possible)
+}
+
+type InfraBeans = {
   ArticleOutgoingPort: ArticleOutgoingPort; // interface (class is also possible)
 }
+
+type Beans = UseCaseBeans & InfraBeans
 
 const beanConfig: BeanConfig<Beans> = {
   // compile error if ArticleQueryService is not compatible with GetArticleUseCase.
@@ -79,26 +84,33 @@ const beanConfig: BeanConfig<Beans> = {
 
 const applicationContext = ApplicationContext(beanConfig);
 
-const getArticleUseCase = applicationContext.get("GetArticleUseCase")
+function getUseCase<TUseCaseName extends keyof UseCaseBeans>(
+  useCaseName: TUseCaseName,
+): UseCaseBeans[TUseCaseName] {
+  return applicationContext.get(useCaseName)
+}
+
+// Only use-case beans can be resolved from application entry points.
+const getArticleUseCase = getUseCase("GetArticleUseCase")
 
 getArticleUseCase.execute(1).then(console.log)
 ```
 
 ## TL;DR
 
-`inversify-typesafe-spring-like` is a Spring-flavored add-on for `inversify-typesafe`. Define a `Beans` map, register every bean with `BeanConfig`, create an `Autowired` decorator with `returnAutowired`, and initialize the container with `ApplicationContext`. Bean names are checked and return types are inferred at compile time, while beans use singleton scope by default.
+`inversify-typesafe-spring-like` is a Spring-flavored add-on for `inversify-typesafe`. Define separate `UseCaseBeans` and `InfraBeans` maps, combine them into `Beans`, register every bean with `BeanConfig`, and create an `Autowired` decorator with `returnAutowired`. Initialize the container with `ApplicationContext`, and resolve only use cases through a `getUseCase` helper at application entry points. Bean names are checked and return types are inferred at compile time, while beans use singleton scope by default.
 
 <details>
 <summary><strong>For AI Agents Using This Library</strong></summary>
 
-- Define one `Beans` map whose string keys are bean names and whose values are the types returned for those names.
-- Declare a `BeanConfig<Beans>` containing every key in `Beans`, and bind each key to a compatible implementation with the provided `bind()` function.
+- Define `UseCaseBeans` for application entry points and `InfraBeans` for infrastructure dependencies, then combine them as `type Beans = UseCaseBeans & InfraBeans`.
+- Declare a `BeanConfig<Beans>` containing every key in the combined map, and bind each key to a compatible implementation with the provided `bind()` function.
 - Create a project-local decorator by destructuring `const { Autowired } = returnAutowired<Beans>()`, then use `@Autowired("BeanName")` for constructor injection.
 - Pass the bean config to `ApplicationContext`; let TypeScript infer the context type instead of adding a generic argument manually.
-- Resolve beans with `applicationContext.get("BeanName")`. Do not cast bean names or result types, because doing so bypasses compile-time checks.
+- Expose a `getUseCase<T extends keyof UseCaseBeans>` helper that calls `applicationContext.get`; use it at application entry points so infrastructure beans cannot be resolved there.
 - Assume singleton scope unless an explicit `ContainerOptions` argument passed to `ApplicationContext` overrides `defaultScope`.
 - Use the underlying `inversify-typesafe` capabilities for advanced bindings and the original InversifyJS API. `BeanConfig`, `ApplicationContext`, and `returnAutowired` correspond to `TypesafeServiceConfig`, `createTypesafeContainer`, and `returnTypesafeInject` respectively.
-- Keep the `Beans` map, bean config, `get` calls, and `Autowired` decorators synchronized whenever a bean is added, removed, or renamed.
+- Keep the bean maps, bean config, `getUseCase` helper, and `Autowired` decorators synchronized whenever a bean is added, removed, or renamed.
 
 </details>
 
