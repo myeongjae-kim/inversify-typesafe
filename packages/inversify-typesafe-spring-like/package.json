@@ -1,7 +1,7 @@
 {
   "name": "inversify-typesafe-spring-like",
   "type": "module",
-  "version": "0.5.12",
+  "version": "0.5.13",
   "packageManager": "pnpm@11.13.0",
   "description": "Add-On Library for inversify-typesafe to make it more like Spring.",
   "source": "src/index.ts",
