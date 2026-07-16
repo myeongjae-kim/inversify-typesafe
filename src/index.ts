@@ -19,7 +19,7 @@ export const createTypesafeContainer = <S extends AbstractServiceMap>(
   options?: ContainerOptions,
 ): TypesafeContainer<S> => {
   const container = new Container(options) as unknown as TypesafeContainer<S>;
-  container._get = container.get;
+  container._get = container.get.bind(container);
 
   Object.entries(serviceConfig).forEach(([name, bindingFunction]) => {
     bindingFunction(() => container.bind(name), container);
