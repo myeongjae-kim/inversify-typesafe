@@ -1,7 +1,7 @@
 {
   "name": "inversify-typesafe-spring-like",
   "type": "module",
-  "version": "0.5.10",
+  "version": "0.5.11",
   "description": "Add-On Library for inversify-typesafe to make it more like Spring.",
   "source": "src/index.ts",
   "exports": {
@@ -62,7 +62,7 @@
   "author": "Myeongjae Kim",
   "license": "MIT",
   "dependencies": {
-    "inversify-typesafe": "^0.5.10"
+    "inversify-typesafe": "^0.5.11"
   },
   "devDependencies": {
     "inversify": "^8.1.3",
