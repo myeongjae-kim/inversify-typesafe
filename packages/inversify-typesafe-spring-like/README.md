@@ -16,7 +16,7 @@
     <img src="https://img.shields.io/codecov/c/github/myeongjae-kim/inversify-typesafe.svg" alt="Test Coverage" height="18">
   </a>
   <a href="https://www.npmjs.com/package/inversify-typesafe-spring-like">
-    <img src="https://img.shields.io/npm/v/inversify-typesafe-spring-like.svg" alt="npm version" height="18">
+    <img src="https://nodei.co/npm/inversify-typesafe-spring-like.svg?style=shields&data=v,u,d&color=brightgreen" alt="npm version, updated date, weelky downloads" height="18">
   </a>
   <a href="https://bundlephobia.com/package/inversify-typesafe-spring-like">
     <img src="https://img.shields.io/bundlephobia/minzip/inversify-typesafe-spring-like" alt="Bundle Size" height="18">
