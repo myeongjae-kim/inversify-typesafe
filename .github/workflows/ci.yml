@@ -15,9 +15,9 @@ jobs:
         with:
           node-version: ${{ matrix.nodejs }}
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
         with:
-          version: 11
+          version: 11.13.0
 
       - name: (cache) restore
         uses: actions/cache@master
